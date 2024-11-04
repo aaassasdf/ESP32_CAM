@@ -1,6 +1,6 @@
 /* Automatically generated file; DO NOT EDIT */
 /* Espressif IoT Development Framework Linker Script */
-/* Generated from: C:\Users\micha\Desktop\ESP32\ESP32-CAM-ESP-IDF-Live-Streaming-Web-Server\build\esp-idf\esp_system\ld\sections.ld.in */
+/* Generated from: C:\ESP32\ESP32_CAM\build\esp-idf\esp_system\ld\sections.ld.in */
 
 /*
 
@@ -24,7 +24,7 @@
 
  * Automatically generated file. DO NOT EDIT.
 
- * Espressif IoT Development Framework (ESP-IDF) 5.3.0 Configuration Header
+ * Espressif IoT Development Framework (ESP-IDF) 5.3.1 Configuration Header
 
  */
        

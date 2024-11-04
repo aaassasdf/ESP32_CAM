@@ -9,6 +9,9 @@
 #include "esp_timer.h"
 #include "camera_pins.h"
 #include "connect_wifi.h"
+#include "protocol_examples_common.h"
+#include "esp_netif_sntp.h"
+#include "esp_sntp.h"
 
 static const char *TAG = "esp32-cam Webserver";
 
@@ -24,10 +27,7 @@ static const char* _STREAM_PART = "Content-Type: image/jpeg\r\nContent-Length: %
 #define LEDC_HS_MODE           LEDC_HIGH_SPEED_MODE
 #define LEDC_GPIO              (4)
 #define LEDC_HS_CH0_CHANNEL    LEDC_CHANNEL_0
-#define CAM_LED_CONTROL        1
-#define LEDC_LS_TIMER          LEDC_TIMER_2
-#define LEDC_LS_MODE           LEDC_LOW_SPEED_MODE
-#define LEDC_LS_CH0_CHANNEL    LEDC_CHANNEL_0
+#define CAM_LED_CONTROL        (1)
 
 static esp_err_t init_camera(void)
 {
@@ -186,6 +186,10 @@ void app_main()
 {
     esp_err_t err;
 
+    // SNTP API configuration
+    esp_sntp_config_t config = ESP_NETIF_SNTP_DEFAULT_CONFIG_MULTIPLE(2,
+                                ESP_SNTP_SERVER_LIST("pool.ntp.org", "time.google.com"));
+
     // Initialize NVS
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
@@ -207,12 +211,28 @@ void app_main()
         setup_server();
         ESP_LOGI(TAG, "ESP32 CAM Web Server is up and running\n");
 
+
+        err = esp_netif_sntp_init(&config);
+
+        if (err != ESP_OK)
+        {
+            printf("err: %s\n", esp_err_to_name(err));
+            return;
+        }
+
+        esp_netif_sntp_start();
+
+        if (esp_netif_sntp_sync_wait(pdMS_TO_TICKS(10000)) != ESP_OK) {
+        printf("Failed to update system time within 10s timeout");
+}
+
         err = init_led();
         if (err != ESP_OK)
         {
             printf("err: %s\n", esp_err_to_name(err));
             return;
         }
+        ESP_LOGI(TAG, "LED is initialized\n");
     }
 
 
