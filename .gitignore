@@ -51,5 +51,10 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+<<<<<<< HEAD
 # Exclude specific files
 main\connect_wifi.c
+=======
+#ignore specfic files
+main/connect_wifi.c
+>>>>>>> 7b665268ce4ed60513db59958f09c329dc7e0397
